@@ -43,6 +43,9 @@
                     "error"
                 ]
             }
+        ],
+        "space-infix-ops": [
+            "error"
         ]
     },
     "globals": {

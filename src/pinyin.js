@@ -1,5 +1,5 @@
 ///Primary Function.
-function pinyinize(str){
+export function pinyinize(str){
 	return pinyinizeWordWithNumber(str,true);
 }
 

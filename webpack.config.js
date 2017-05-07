@@ -1,6 +1,11 @@
 var webpack = require('webpack');
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var fs = require('fs');
+
+var includePaths = [
+  fs.realpathSync(__dirname + '/src'),
+];
 
 module.exports = {
 
@@ -29,15 +34,32 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.(svg|jsx?)$/,
+        test: /\.(jsx?)$/,
         exclude: /node_modules/,
         loader: "babel-loader",
+        include: includePaths,
         query:
           {
             presets:["es2015", "stage-0", "react"],
           }
       },
-
+      {
+        test: /\.svg$/,
+        loaders: [
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: ['es2015']
+            }
+          },
+          {
+            loader: 'react-svg-loader?jsx=1',
+            query: {
+              jsx: true
+            }
+          }
+        ]
+      },
       {
         test: /\.css$/,
         loader: "style-loader!css-loader"

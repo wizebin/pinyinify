@@ -7,5 +7,5 @@ export function execute(statement) {
     return db.all(statement, (err, results) => {
       resolve(results);
     });
-  }
+  });
 }

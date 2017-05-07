@@ -44,7 +44,6 @@ export function importDictionary(filename) {
         const row = cols.map(val => "'" + val.replace("'", "''") + "'");
         const values = row.join(',');
         const statement = `INSERT INTO translations (traditional, simplified, pinyin, english) VALUES(${values})`;
-        // console.log('\n\nstatement', statement);
         execute(statement);
         count++;
       }

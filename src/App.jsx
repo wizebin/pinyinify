@@ -15,13 +15,13 @@ class App extends Component {
     this.setState({
       input: event.target.value,
     });
-  }
+  };
 
   displayResults = () => {
     const { pronounciations } = this.state;
 
-    return pronounciations.reduce((memo, item) => {
-      memo.push(<p key={item.id}>{item.simplified + " " + item.pinyin}</p>); // format this to match pronounciation display
+    return pronounciations.reduce((memo, item, dex) => {
+      memo.push(<p key={item.id || dex}>{item.simplified + " " + item.pinyin}</p>); // format this to match pronounciation display
       return memo;
     }, []);
   }
@@ -41,7 +41,7 @@ class App extends Component {
           <input type="name" onChange={this.handleChange}/>
           <button onClick={this.handleClick}>Pronounce</button>
         </div>
-        < hr/>
+        <hr/>
         <div className="bottom">
           {this.state.pronounciations ? this.displayResults() : null}
         </div>

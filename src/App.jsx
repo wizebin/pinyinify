@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Logo from './logo.svg';
 import { requestData } from './client/client';
 import { fixPinyin, fixEnglish } from './chinese/pinyin';
+import { languages } from './utility/constants';
 import './App.css';
 
 import _ from 'underscore';
@@ -12,6 +13,7 @@ class App extends Component {
     this.state = {
       input: '',
       pronounciations: [],
+      language: languages[0],
     };
   }
 
@@ -25,6 +27,12 @@ class App extends Component {
     });
   };
 
+  handleLanguageChange = (event) => {
+    this.setState({
+      language: event.target.value,
+    });
+  };
+
   handleKeyUp = (e) => {
     if (e.key === 'Enter') {
       this.submitRequest();
@@ -32,8 +40,8 @@ class App extends Component {
   };
 
   submitRequest = () => {
-    const { input } = this.state
-    requestData(input).then((results, err) => {
+    const { input, language } = this.state
+    requestData(input, language).then((results, err) => {
       if (err != null) {
         console.error('got error from chinese to pinyin', err);
       }
@@ -103,7 +111,7 @@ class App extends Component {
           {this.renderHighlighted(item.simplified, fixPinyin(item.pinyin), request, this.renderHightlightedText, this.renderNormalText)}
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-begin', color: '#888888', flexWrap: 'wrap' }}>
-          {fixEnglish(item.english).map(item => <div className="englishRow" style={{ marginRight: '5px' }}>{item}</div>)}
+          {fixEnglish(item.english).map((item, dex) => <div key={'' + item.id + '.' + dex} className="englishRow" style={{ marginRight: '5px' }}>{item}</div>)}
         </div>
       </div>
     )
@@ -111,7 +119,7 @@ class App extends Component {
 
   renderEmpty() {
     return (
-      <div>
+      <div style={{ padding: '10px' }}>
         No Results
       </div>
     );
@@ -127,11 +135,22 @@ class App extends Component {
     return pronounciations.map((item, dex) => this.renderResultRow(item, dex, input));
   }
 
+  renderLanguages = () => {
+    const { language } = this.state;
+
+    return (
+      <select style={{ height: '36px', border: '1px solid #eeeeee'}} onChange={this.handleLanguageChange} defaultValue={language}>
+        {languages.map(lang => <option key={lang} value={lang} label={lang} />)}
+      </select>
+    );
+  }
+
   render() {
     return (
       <div className="container">
-        <div style={{ padding: '20px 20px 20px 20px', borderBottom: '1px solid #bbb' }}>
-          <input style={{ width: '100%', fontSize: '22px', padding: '3px', boxSizing: 'border-box', color: '#444444' }} type="name" onKeyPress={this.handleKeyUp} onChange={this.handleChange}/>
+        <div style={{ padding: '20px 20px 20px 20px', borderBottom: '1px solid #bbb', display: 'flex' }}>
+          <input style={{ width: '100%', fontSize: '22px', padding: '3px', boxSizing: 'border-box', color: '#444444', marginRight: '5px' }} type="name" onKeyPress={this.handleKeyUp} onChange={this.handleChange}/>
+          {this.renderLanguages()}
         </div>
         <div className="bottom" style={{ paddingTop: '10px', backgroundColor: '#FBFBFB' }}>
           {this.renderResults()}

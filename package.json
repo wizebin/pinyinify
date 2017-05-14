@@ -39,9 +39,11 @@
     "lint": "./node_modules/.bin/eslint ./src",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "client": "NODE_ENV=local babel-node server",
-    "server": "babel-node --presets es2015 -e 'require(\"./src/server/server.js\").serve()'",
+    "client": "export NODE_ENV=local babel-node server",
+    "winclient": "cmd /C \"set NODE_ENV=local && babel-node server\"",
+    "server": "babel-node --presets es2015 ./src/server/server.js",
     "start": "concurrently --kill-others \"npm run server\" \"npm run client\"",
+    "windows": "concurrently --kill-others \"npm run server\" \"npm run winclient\"",
     "instantiate": "babel-node --presets es2015 -e 'require(\"./src/storage/setup.js\").fillDatabaseFromConfig()'",
     "default_instantiate": "DICTIONARY_FILENAME=./src/chinese/chinese_dictionary.txt npm run instantiate"
   }

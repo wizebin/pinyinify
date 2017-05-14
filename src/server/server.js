@@ -67,3 +67,5 @@ export function serve() {
 
   app.listen(port);
 }
+
+serve();

@@ -13,7 +13,6 @@ const port = process.env.PORT || 9000;
 const app = express();
 app.use(compress());
 
-// We don't build for production yet so we will just run in dev mode.
 if (isDeveloping) {
   const compiler = webpack(config);
   const middleware = webpackMiddleware(compiler, {

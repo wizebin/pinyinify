@@ -16,6 +16,25 @@ function getLanguage(requested) {
   return 'simplified';
 }
 
+function getResultsForLanguage(language, input, limit, offset) {
+  let query = `select * from translations where ${language} like '%${input}%'`;
+  if (limit) {
+    query += ` LIMIT ${limit}`;
+  }
+  if (offset) {
+    query += ` OFFSET ${offset}`;
+  }
+  return execute(query).then(result => result.sort(chineseResultSortFunctionCreator(language, input)));
+}
+
+function getResultsForAnyLanguage(input, limit, offset) {
+  const passLangs = _.without(languages, 'any');
+  const promises = passLangs.map(language => getResultsForLanguage(language, input, limit, offset));
+  return Promise.all(promises).then((result) => {
+    return result.reduce((culm, result, dex) => Object.assign(culm, { [passLangs[dex]]: result }), {});
+  });
+}
+
 export function serve() {
   const app = express();
   const port = process.env.SERVER_PORT || '3000';
@@ -33,12 +52,15 @@ export function serve() {
       if (_.isEmpty(input)) {
         res.status(400).send(JSON.stringify({ error: 'Must specify an input' }));
       } else {
-        const query = `select * from translations where ${lang} like '%${input}%' LIMIT 300`;
-        execute(query).then((data) => {
-          res.send(JSON.stringify({ results: data.sort(chineseResultSortFunctionCreator(lang, input)) }));
-        }).catch((err) => {
-          res.status(500).send(JSON.stringify({ err }));
-        });
+        let prom;
+        if (lang !== 'any') {
+          prom = getResultsForLanguage(lang, input).then(result => {return { [lang]: result };});
+        } else {
+          prom = getResultsForAnyLanguage(input);
+        }
+
+        prom.then((results) => res.send(JSON.stringify({ results })))
+            .catch((err) => res.status(500).send(JSON.stringify({ err })));
       }
     }
   });

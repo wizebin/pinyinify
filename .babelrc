@@ -1,4 +1,4 @@
 {
   "presets": ["es2015", "stage-0", "react"],
-  "plugins": ["transform-react-display-name"]
+  "plugins": ["transform-react-display-name", "./webpack_rootify.js"]
 }

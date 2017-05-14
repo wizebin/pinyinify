@@ -22,7 +22,9 @@ export function httpVERB(url, verb, params, headers) {
             if (xhr.status === 0) {
               reject(new Error('Request error, check your console, possibly a url misconfiguration (did you forget http?)- you tried to access ' + url + ' ' + verb));
             } else {
-              reject(xhr);
+              const status = xhr.status;
+              const responseText = xhr.responseText;
+              reject(new Error(`Http Error ${status}: ${responseText}`));
             }
           }
         }

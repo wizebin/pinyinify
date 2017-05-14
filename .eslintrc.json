@@ -50,6 +50,7 @@
     },
     "globals": {
         "window": false,
-        "process": false
+        "process": false,
+        "module": false
     }
 }

@@ -1,1 +1,1 @@
-export const languages = ['simplified', 'traditional', 'pinyin', 'english'];
+export const languages = ['any', 'simplified', 'traditional', 'pinyin', 'english'];
